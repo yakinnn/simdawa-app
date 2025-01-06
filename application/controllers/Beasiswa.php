@@ -1,3 +1,5 @@
+// controller/Beasiswa.php
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -6,9 +8,10 @@ class Beasiswa extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('pdf');
         $this->load->model('BeasiswaModel');
-        $this->load->model('JenisBeasiswaModel');
-        // $this->load->model(array('BeasiswaModel','JenisBeasiswaModel'));
+        $this->load->model('JenisModel');
+        // $this->load->model(array('BeasiswaModel','JenisModel'));
     }
 
     public function index()
@@ -23,12 +26,12 @@ class Beasiswa extends CI_Controller
 
     public function tambah()
     {
-        if ($this->input->post('create')) {
+        if (isset($_POST['create'])) {
             $this->BeasiswaModel->insert_beasiswa();
             redirect('beasiswa');
         } else {
             $data['title'] = 'Tambah Data Beasiswa';
-            $data['jenis_beasiswa'] = $this->JenisBeasiswaModel->get_jenis();
+            $data['jenis'] = $this->JenisModel->get_jenis();
             $this->load->view('template/header', $data);
             $this->load->view('template/sidebar');
             $this->load->view('beasiswa/beasiswa_create', $data);
@@ -38,13 +41,13 @@ class Beasiswa extends CI_Controller
 
     public function ubah($id)
     {
-        if ($this->input->post('update')) {
+        if (isset($_POST['update'])) {
             $this->BeasiswaModel->update_beasiswa($id);
             redirect('beasiswa');
         } else {
             $data['title'] = 'Ubah Data Beasiswa';
-            $data['beasiswa'] = $this->BeasiswaModel->get_beasiswa_by_id($id);
-            $data['jenis_beasiswa'] = $this->JenisBeasiswaModel->get_jenis();
+            $data['beasiswa'] = $this->BeasiswaModel->get_beasiswa_byid($id);
+            $data['jenis'] = $this->JenisModel->get_jenis();
             $this->load->view('template/header', $data);
             $this->load->view('template/sidebar');
             $this->load->view('beasiswa/beasiswa_update', $data);
@@ -56,5 +59,11 @@ class Beasiswa extends CI_Controller
     {
         $this->BeasiswaModel->delete_beasiswa($id);
         redirect('beasiswa');
+    }
+
+    public function cetak()
+    {
+        $data['beasiswa'] = $this->BeasiswaModel->get_beasiswa();
+        $this->load->view('beasiswa/beasiswa_print', $data);
     }
 }
