@@ -16,6 +16,13 @@ class JenisModel extends CI_Model
             'keterangan' => $this->input->post('keterangan')
         ];
         $this->db->insert($this->tabel, $data);
+        if ($this->db->affected_rows() > 0) {
+            $this->session->set_flashdata('pesan', 'Data jenis berhasil ditambahkan!');
+            $this->session->set_flashdata('status', true);
+        } else {
+            $this->session->set_flashdata('pesan', 'Data beasiswa gagal ditambahkan!');
+            $this->session->set_flashdata('status', false);
+        }
     }
 
     public function get_jenis_byid($id)
@@ -32,11 +39,25 @@ class JenisModel extends CI_Model
 
         $this->db->where('id', $this->input->post('id'));
         $this->db->update($this->tabel, $data);
+        if ($this->db->affected_rows() > 0) {
+            $this->session->set_flashdata('pesan', 'Data jenis berhasil diperbaharui!');
+            $this->session->set_flashdata('status', true);
+        } else {
+            $this->session->set_flashdata('pesan', 'Data jenis gagal diperbaharui!');
+            $this->session->set_flashdata('status', false);
+        }
     }
 
     public function delete_jenis($id)
     {
         $this->db->where('id', $id);
         $this->db->delete($this->tabel);
+        if ($this->db->affected_rows() > 0) {
+            $this->session->set_flashdata('pesan', 'Data jenis berhasil dihapus!');
+            $this->session->set_flashdata('status', true);
+        } else {
+            $this->session->set_flashdata('pesan', 'Data jenis gagal dihapus!');
+            $this->session->set_flashdata('status', false);
+        }
     }
 }
